@@ -12,6 +12,9 @@ BUILD_DIR = $(ROOT)/build/$(TARGET)/
 
 TARGET_BIN = $(BUILD_DIR)/$(TARGET).bin
 
+# debug probe configuration
+BMP ?= /dev/ttyBmpGdb
+
 # stm32 sdk paths
 # CUBE ?= $(ROOT)/STM32CubeF0 # not using cube for now
 CMSIS = Drivers/CMSIS
@@ -114,16 +117,19 @@ $(BUILD_DIR):
 clean:
 	-rm -fR $(BUILD_DIR)
 
-# st-link flashing
-flash: $(TARGET_BIN)
-	st-flash erase
-	st-flash write $(TARGET_BIN) 0x8000000
-	st-flash reset
+# start gdb, connect to blackmagic probe, re-flash firmware
+flash: $(BUILD_DIR)/$(TARGET).elf
+	$(DB)   -iex "target extended-remote $(BMP)" \
+		    -ex "monitor connect_rst enable" \
+	        -ex "monitor swd_scan" \
+			-ex "attach 1" \
+			-ex "load" \
+			$<
 
-.PHONY: debug_server
-debug_server:
-	st-util
-
-dbg: $(TARGET_ELF)
-	$(DB) --eval-command="target remote localhost:4242" $(TARGET_ELF)
-
+# start gdb, connect to blackmagic probe, DONT re-flash firmware (gdb output may not be valid if firmware is out of date)
+dbg: $(BUILD_DIR)/$(TARGET).elf
+	$(DB)   -iex "target extended-remote $(BMP)" \
+		    -ex "monitor connect_rst enable" \
+	        -ex "monitor swd_scan" \
+			-ex "attach 1" \
+			$<

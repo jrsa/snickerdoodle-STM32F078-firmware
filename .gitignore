@@ -65,3 +65,6 @@
 *.iex
 *.tmp
 *.DS_Store
+
+build/*
+.gdb_history
