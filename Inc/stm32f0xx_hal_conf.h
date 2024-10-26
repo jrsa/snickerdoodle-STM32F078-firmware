@@ -129,9 +129,12 @@
   * @brief Internal High Speed oscillator for USB (HSI48) value.
   */
 #if !defined  (HSI48_VALUE) 
+#warning "HSI48_VALUE not defined, defining"
 #define HSI48_VALUE ((uint32_t)48000000) /*!< Value of the Internal High Speed oscillator for USB in Hz.
                                              The real value may vary depending on the variations
                                              in voltage and temperature.  */
+#else
+#warning "HSI48_VALUE already defined"
 #endif /* HSI48_VALUE */
 
 /**

@@ -70,6 +70,7 @@
 /*---------- -----------*/
 #define USBD_SELF_POWERED     1
 /*---------- -----------*/
+#define MSC_MEDIA_PACKET                       8192   
 #define USBD_CDC_INTERVAL     1000
 /*---------- -----------*/
 #define MAX_STATIC_ALLOC_SIZE     512

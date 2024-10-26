@@ -183,6 +183,7 @@ void SystemInit(void)
   RCC->CFGR2 &= (uint32_t)0xFFFFFFF0;
 
 #if defined (STM32F072xB) || defined (STM32F078xx)
+#warning foo
   /* Reset USART2SW[1:0], USART1SW[1:0], I2C1SW, CECSW, USBSW and ADCSW bits */
   RCC->CFGR3 &= (uint32_t)0xFFFCFE2C;
 #elif defined (STM32F071xB)
