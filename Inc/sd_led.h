@@ -50,6 +50,7 @@ extern "C" {
 #endif
 
 
+#include "stm32f0xx_hal.h"
 /**
  * @addtogroup SD_LED
  * @{
