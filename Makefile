@@ -2,7 +2,6 @@
 
 TARGET = hello
 
-C_SOURCES := $(wildcard $(ROOT)/Src/*.c)
 
 ROOT ?= .
 TARGET_DIR ?= .
@@ -16,14 +15,18 @@ TARGET_BIN = $(BUILD_DIR)/$(TARGET).bin
 # stm32 sdk paths
 CUBE ?= $(ROOT)/STM32CubeF0
 CMSIS = $(CUBE)/Drivers/CMSIS
+HAL = $(CUBE)/Drivers/STM32F0xx_HAL_Driver
+USB_CORE = $(CUBE)/Middlewares/ST/STM32_USB_Device_Library/Core
+USB_CDC = $(CUBE)/Middlewares/ST/STM32_USB_Device_Library/Class/CDC
 ST_DIST = $(CMSIS)/Device/ST/STM32F0xx
 
 # chip specific defines
 # DEVICE = STM32F072VB
 C_DEFS = -DSTM32F072xB
 
-LDSCRIPT = $(CUBE)/Projects/STM32F072RB-Nucleo/Templates_LL/SW4STM32/STM32F072RB-Discovery/STM32F072RBTx_FLASH.ld
+LDSCRIPT = $(CUBE)/Projects/STM32F072RB-Nucleo/Templates_LL/SW4STM32/STM32F072RB-Nucleo/STM32F072RBTx_FLASH.ld
 
+C_SOURCES := $(wildcard $(ROOT)/Src/*.c)
 C_SOURCES += $(ST_DIST)/Source/Templates/system_stm32f0xx.c 
 ASM_SOURCES += $(ST_DIST)/Source/Templates/gcc/startup_stm32f072xb.s
 
@@ -41,7 +44,7 @@ DB = $(BINPATH)/$(PREFIX)gdb
 
 CPU = -mcpu=cortex-m0
 
-C_INCLUDES += -I$(ROOT)/Inc -I$(ST_DIST)/Include -I$(CMSIS)/Include
+C_INCLUDES += -I$(ROOT)/Inc -I$(ST_DIST)/Include -I$(CMSIS)/Include -I$(HAL)/Inc -I$(USB_CORE)/Inc -I$(USB_CDC)/Inc
 
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
