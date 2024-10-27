@@ -2,12 +2,13 @@
 
 TARGET = sd_platform
 
+DEBUG = 1
 
 ROOT ?= .
 TARGET_DIR ?= .
 
 DEBUG = 1
-OPT = -Og
+OPT = -O0
 BUILD_DIR = $(ROOT)/build/$(TARGET)/
 
 TARGET_BIN = $(BUILD_DIR)/$(TARGET).bin
@@ -26,11 +27,32 @@ ST_DIST = $(CMSIS)/Device/ST/STM32F0xx
 
 # chip specific defines
 # DEVICE = STM32F072VB
-C_DEFS = -DSTM32F072xB
+C_DEFS = -DSTM32F078xx -DUSE_HAL_DRIVER
 
 LDSCRIPT = sd_platform.ld
 
-C_SOURCES := $(wildcard $(ROOT)/Src/*.c)
+C_SOURCES = Src/usb_device.c \
+		 	Src/stm32f0xx_hal_msp.c \
+			Src/usbd_desc.c \
+			Src/usbd_conf.c \
+			Src/main.c \
+			Src/sd_platform.c \
+			Src/sd_i2c.c \
+			Src/sd_spi.c \
+			Src/sd_spi_bridge.c \
+			Src/sd_usbd_cdc_if.c \
+			Src/sd_interrupt.c \
+			Src/sd_buffer.c \
+			Src/sd_led.c \
+			Src/sd_led_pattern.c \
+			Src/sd_uart.c \
+			Src/sd_button.c \
+			Src/sd_pwm.c \
+			Src/sd_gpio.c \
+			Src/sd_tim.c \
+			Src/sd_adc.c \
+			Src/sd_dac.c
+
 C_SOURCES += $(ST_DIST)/Source/Templates/system_stm32f0xx.c 
 C_SOURCES += \
 	$(HAL)/Src/stm32f0xx_hal.c \
@@ -56,7 +78,7 @@ C_SOURCES += \
 	$(USB_CORE)/Src/usbd_ctlreq.c \
 	$(USB_CDC)/Src/usbd_cdc.c
 
-ASM_SOURCES += $(ST_DIST)/Source/Templates/gcc/startup_stm32f072xb.s
+ASM_SOURCES += $(ST_DIST)/Source/Templates/gcc/startup_stm32f078xx.s
 
 # toolchain
 BINPATH = /usr/bin
@@ -72,14 +94,14 @@ DB = $(BINPATH)/$(PREFIX)gdb
 
 CPU = -mcpu=cortex-m0
 
-C_INCLUDES += -I$(ROOT)/Inc -I$(ST_DIST)/Include -I$(CMSIS)/Include -I$(HAL)/Inc -I$(USB_CORE)/Inc -I$(USB_CDC)/Inc -I$(USB_MSC)/Inc
+C_INCLUDES += -I$(ROOT)/Inc -I$(ST_DIST)/Include -I$(CMSIS)/Include -I$(HAL)/Inc -I$(HAL)/Inc/Legacy -I$(USB_CORE)/Inc -I$(USB_CDC)/Inc -I$(USB_MSC)/Inc
 
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wfatal-errors -Wall -fdata-sections -ffunction-sections -std=c99
 
 ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2
+CFLAGS += -g3 -gdwarf-2
 endif
 
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"
