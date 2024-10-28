@@ -81,6 +81,49 @@ extern ADC_HandleTypeDef hadc;
  * @{
  */
 
+// can maybe see mystery interrupts this way
+#if 1
+void  NMI_Handler(void)       { __asm("bkpt"); }
+void  HardFault_Handler(void) {__asm("bkpt");}
+void  SVC_Handler(void)       {__asm("bkpt");}
+void  PendSV_Handler(void)    {__asm("bkpt");}
+//void  SysTick_Handler(void)   {__asm("bkpt");}
+
+void WWDG_IRQHandler(void) { __asm("bkpt"); }
+void VDDIO2_IRQHandler(void) { __asm("bkpt"); }
+void RTC_IRQHandler(void) { __asm("bkpt"); }
+void FLASH_IRQHandler(void) { __asm("bkpt"); }
+void RCC_CRS_IRQHandler(void) { __asm("bkpt"); }
+void EXTI0_1_IRQHandler(void) { __asm("bkpt"); }
+//void EXTI2_3_IRQHandler(void) { __asm("bkpt"); }
+//void EXTI4_15_IRQHandler(void) { __asm("bkpt"); }
+void TSC_IRQHandler(void) { __asm("bkpt"); }
+void DMA1_Channel1_IRQHandler(void) { __asm("bkpt"); }
+void DMA1_Channel2_3_IRQHandler(void) { __asm("bkpt"); }
+void DMA1_Channel4_5_6_7_IRQHandler(void) { __asm("bkpt"); }
+//void ADC1_COMP_IRQHandler(void) { __asm("bkpt"); }
+//void TIM1_BRK_UP_TRG_COM_IRQHandler(void) { __asm("bkpt"); }
+void TIM1_CC_IRQHandler(void) { __asm("bkpt"); }
+void TIM2_IRQHandler(void) { __asm("bkpt"); }
+void TIM3_IRQHandler(void) { __asm("bkpt"); }
+void TIM6_DAC_IRQHandler(void) { __asm("bkpt"); }
+//void TIM7_IRQHandler(void) { __asm("bkpt"); }
+void TIM14_IRQHandler(void) { __asm("bkpt"); }
+void TIM15_IRQHandler(void) { __asm("bkpt"); }
+void TIM16_IRQHandler(void) { __asm("bkpt"); }
+void TIM17_IRQHandler(void) { __asm("bkpt"); }
+void I2C1_IRQHandler(void) { __asm("bkpt"); }
+void I2C2_IRQHandler(void) { __asm("bkpt"); }
+void SPI1_IRQHandler(void) { __asm("bkpt"); }
+//void SPI2_IRQHandler(void) { __asm("bkpt"); }
+//void USART1_IRQHandler(void) { __asm("bkpt"); }
+//void USART2_IRQHandler(void) { __asm("bkpt"); }
+void USART3_4_IRQHandler(void) { __asm("bkpt"); }
+void CEC_CAN_IRQHandler(void) { __asm("bkpt"); }
+//void USB_IRQHandler(void) { __asm("bkpt"); }
+#endif
+
+
 /**
  * @brief	SysTick Handler
  *		This function handles System tick timer.
@@ -136,17 +179,18 @@ void TIM7_IRQHandler(void)
 {
 	HAL_GPIO_WritePin(J2_P3_GPIO_Port, J2_P3_Pin, GPIO_PIN_SET);
 
+// requires pwm timers and other stuff
 #if 0
 	sd_led_queuehandler(&app_led);
 	sd_led_queuehandler(&bluetooth_led);
 	sd_led_queuehandler(&usb_led);
 	sd_led_queuehandler(&fault_led);
+#endif
 	
 	sd_button_run(&reset_button);
 	
 //	sd_adc_monitor(&adc_dev);
 	//sd_button_run(&select_button);
-#endif
 	
 	HAL_TIM_IRQHandler(&htim7);
 
@@ -155,9 +199,7 @@ void TIM7_IRQHandler(void)
 	HAL_GPIO_TogglePin(J2_P4_GPIO_Port, J2_P4_Pin);
 	
 	/* Bridge UART <--> USB */
-#if 1
 	sd_uart_usb_transmit(&uart1_dev);
-#endif
 	
 	HAL_GPIO_WritePin(J2_P3_GPIO_Port, J2_P3_Pin, GPIO_PIN_RESET);
 }
@@ -194,16 +236,6 @@ void USART2_IRQHandler(void)
 	sd_led_blink(&bluetooth_led);		/* Blink indicator */
 	sd_uart_irqhandler(&uart2_dev);		/* Handle interrupt */
 	HAL_TIM_Base_Start_IT(&htim7);		/* Restart update timer */
-}
-
-/**
- * @brief	USART 2 Interrupt Handler
- *		This function handles USART2 global interrupt / USART2 wake-up
- *		interrupt through EXTI line 26.
- */
-void USART3_4_IRQHandler(void)
-{
-
 }
 
 /**

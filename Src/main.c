@@ -150,7 +150,6 @@ int main(void)
 
 	/* Initialize the USB device */
 	MX_USB_DEVICE_Init();
-#if 0
  
 	/* Initialize buttons and handlers */
 	sd_button_init(&reset_button,
@@ -160,7 +159,6 @@ int main(void)
 			sd_zynq_enable,
 			2000,
 			sd_zynq_disable);
-#endif
 			
 	/* Configure the antenna */
 	sd_wl18xx_ant_config(WL18xx_ANTENNA_SMA);
