@@ -155,7 +155,7 @@ void TIM7_IRQHandler(void)
 	HAL_GPIO_TogglePin(J2_P4_GPIO_Port, J2_P4_Pin);
 	
 	/* Bridge UART <--> USB */
-#if 0
+#if 1
 	sd_uart_usb_transmit(&uart1_dev);
 #endif
 	

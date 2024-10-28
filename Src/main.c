@@ -135,7 +135,6 @@ int main(void)
 	
 #endif
 	sd_tim7_init();
-#if 0
 	
 	sd_usart1_init();
 	sd_usart2_init();
@@ -151,6 +150,7 @@ int main(void)
 
 	/* Initialize the USB device */
 	MX_USB_DEVICE_Init();
+#if 0
  
 	/* Initialize buttons and handlers */
 	sd_button_init(&reset_button,
@@ -160,6 +160,7 @@ int main(void)
 			sd_zynq_enable,
 			2000,
 			sd_zynq_disable);
+#endif
 			
 	/* Configure the antenna */
 	sd_wl18xx_ant_config(WL18xx_ANTENNA_SMA);
@@ -173,7 +174,6 @@ int main(void)
 	HAL_GPIO_WritePin(SMB_NRESET_GPIO_Port, 
 			  SMB_NRESET_Pin, GPIO_PIN_SET);
 
-#endif
 	/* Start USB, button and LED update timer interrupt */
 	HAL_TIM_Base_Start_IT(&htim7);
   
