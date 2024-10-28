@@ -121,20 +121,25 @@ OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES))) 
 
 $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@echo "[CC] $^"
 
 $(BUILD_DIR)/%.o: %.s | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
+	@$(AS) -c $(CFLAGS) $< -o $@
+	@echo "[AS] $^ -> $@"
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	@echo "[LD] $^ -> $@"
 	$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(HEX) $< $@
+	@$(HEX) $< $@
+	@echo "[HEX] $^ -> $@"
 	
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@	
+	@$(BIN) $< $@	
+	@echo "[BIN] $^ -> $@"
 
 $(BUILD_DIR):
 	mkdir -p $@		
