@@ -107,17 +107,22 @@ int main(void)
 	/* Initialize the GPIO interface */
 	sd_gpio_init();
 	
-	/* Set all of the LEDs on */
-	HAL_GPIO_WritePin(RED_GPIO_Port, RED_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(WHITE_GPIO_Port, WHITE_Pin, GPIO_PIN_RESET);
+	/* Set all of the LEDs off */
+	HAL_GPIO_WritePin(RED_GPIO_Port, RED_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(WHITE_GPIO_Port, WHITE_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GREEN_GPIO_Port, GREEN_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(BLUE_GPIO_Port, BLUE_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(ORANGE_GPIO_Port, ORANGE_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(BLUE_GPIO_Port, BLUE_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(ORANGE_GPIO_Port, ORANGE_Pin, GPIO_PIN_SET);
+
+    // if the debugger disconnected because of a reset pin event, give it some time to hopefully reconnect here
+    HAL_Delay(1000);
+	HAL_GPIO_WritePin(RED_GPIO_Port, RED_Pin, GPIO_PIN_RESET);
 	
 	/* Check the boot configuration */
 	boot = sd_boot_select();
   
 	/* Initialize all configured peripherals */
+#if 0
 	sd_adc_init();
 
 	sd_i2c1_init();
@@ -128,7 +133,9 @@ int main(void)
 	sd_tim1_init();
 	sd_tim3_init();
 	
+#endif
 	sd_tim7_init();
+#if 0
 	
 	sd_usart1_init();
 	sd_usart2_init();
@@ -166,6 +173,7 @@ int main(void)
 	HAL_GPIO_WritePin(SMB_NRESET_GPIO_Port, 
 			  SMB_NRESET_Pin, GPIO_PIN_SET);
 
+#endif
 	/* Start USB, button and LED update timer interrupt */
 	HAL_TIM_Base_Start_IT(&htim7);
   
@@ -187,12 +195,14 @@ int main(void)
 	while (HAL_GPIO_ReadPin(ZYNQ_POWER_GOOD_GPIO_Port,
 				ZYNQ_POWER_GOOD_Pin) != GPIO_PIN_SET)
 		HAL_Delay(10);
+	HAL_GPIO_WritePin(RED_GPIO_Port, RED_Pin, GPIO_PIN_SET);
 
 	/* Enable Zynq clock */
 	sd_zynq_clk_enable(TRUE);
 
 	/* Infinite loop */
 	while (1) {
+        HAL_GPIO_TogglePin(WHITE_GPIO_Port, WHITE_Pin);
 		HAL_Delay(250);
 	}
 }

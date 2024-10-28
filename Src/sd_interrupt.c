@@ -136,6 +136,7 @@ void TIM7_IRQHandler(void)
 {
 	HAL_GPIO_WritePin(J2_P3_GPIO_Port, J2_P3_Pin, GPIO_PIN_SET);
 
+#if 0
 	sd_led_queuehandler(&app_led);
 	sd_led_queuehandler(&bluetooth_led);
 	sd_led_queuehandler(&usb_led);
@@ -145,14 +146,18 @@ void TIM7_IRQHandler(void)
 	
 //	sd_adc_monitor(&adc_dev);
 	//sd_button_run(&select_button);
+#endif
 	
 	HAL_TIM_IRQHandler(&htim7);
 
 	/* Toggle watchdog pin */
 	HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
+	HAL_GPIO_TogglePin(J2_P4_GPIO_Port, J2_P4_Pin);
 	
 	/* Bridge UART <--> USB */
+#if 0
 	sd_uart_usb_transmit(&uart1_dev);
+#endif
 	
 	HAL_GPIO_WritePin(J2_P3_GPIO_Port, J2_P3_Pin, GPIO_PIN_RESET);
 }
