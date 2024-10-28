@@ -16,6 +16,9 @@ TARGET_BIN = $(BUILD_DIR)/$(TARGET).bin
 # debug probe configuration
 BMP ?= /dev/ttyBmpGdb
 
+# other probe configuration
+STLINK = :4242
+
 # stm32 sdk paths
 # CUBE ?= $(ROOT)/STM32CubeF0 # not using cube for now
 CMSIS = Drivers/CMSIS
@@ -154,4 +157,8 @@ dbg: $(BUILD_DIR)/$(TARGET).elf
 		    -ex "monitor connect_rst enable" \
 	        -ex "monitor swd_scan" \
 			-ex "attach 1" \
+			$<
+
+stlinkdbg: $(BUILD_DIR)/$(TARGET).elf
+	$(DB)   -iex "target extended-remote $(STLINK_SRV)" \
 			$<
